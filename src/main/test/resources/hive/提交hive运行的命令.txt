@@ -1,0 +1,6 @@
+./spark-submit 
+	--master spark://node1:7077,node2:7077 
+	--class com.bjsxt.spark.skynet.MonitorFlowAnalyze 
+	--jars ../lib/mysql-connector-java-5.1.6.jar,../lib/fastjson-1.2.11.jar 
+	../lib/ProduceData2Hive.jar 
+	1
