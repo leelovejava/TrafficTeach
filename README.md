@@ -112,7 +112,7 @@ monitor_camera_info 卡扣与摄像头基本关系表
 	
 		更新累加器与take使用时，take算子可以触发多个job执行，可以造成累加器重复计算。
 	
-	./spark-submit --master spark://node1:7077,node2:7077 --jars ../lib/fastjson-1.2.11.jar,../lib/mysql-connector-java-5.1.6.jar  --class com.bjsxt.spark.skynet.MonitorFlowAnalyze  ../lib/Test.jar 1
+	./spark-submit --master spark://node1:7077,node2:7077 --jars ../lib/fastjson-1.2.11.jar,../lib/mysql-connector-java-5.1.6.jar  --class MonitorFlowAnalyze  ../lib/Test.jar 1
 	
 	
 	 ~0001:13846,54785,51995,64341,45994,32228,82054,87746
@@ -276,4 +276,12 @@ sql:
 				) t2
 			) t3
 		where rank <=3
-			
+
+
+屏蔽过多黄色警告,忽略java类方法的参数 与注释；
+    File -> Settings -> Editor -> Inspections -> java ->javadoc:
+    参数不一致的屏蔽：
+        Declaration has problems in Javadoc refere 红色 改成 waring黄色
+    参数没有注释：
+        Dangling Javadoc comment 去掉勾选
+        Declaration has Javadoc problems 去掉勾选
