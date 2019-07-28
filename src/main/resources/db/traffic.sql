@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50173
 File Encoding         : 65001
 
-Date: 2018-07-31 07:50:34
+Date: 2019-07-28 19:38:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -136,11 +136,11 @@ CREATE TABLE `task` (
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', '卡口流量监测', null, '', '', null, null, '{\"startDate\":[\"2018-07-01\"],\"endDate\":[\"2018-07-01\"],\"topNum\":[\"5\"],\"areaName\":[\"海淀区\"]}');
-INSERT INTO `task` VALUES ('2', '随机抽取N个车辆信息', null, null, null, null, null, '{\"startDate\":[\"2018-07-01\"],\"endDate\":[\"2018-07-01\"],\"extractNum\":[\"100\"]}');
-INSERT INTO `task` VALUES ('3', '跟车分析', null, null, null, null, null, '{\"startDate\":[\"2018-07-01\"],\"endDate\":[\"2018-07-01\"],\"cars\":[\"京I42152,京Q18277,京K10100,京R24874,京N63229,京E25462,京W43404,京J13254,鲁G65763,鲁R55733,京L32167,京R54122,京K44557,京W41927,京S90923,京D86196,京W63299,沪N19518,京B47292,京A11951,沪D71306,沪D39243,京G44724,京E05123,京Y03722,京O28098,鲁Y63080,深N55336,京G89927,京Z29402\"]}');
-INSERT INTO `task` VALUES ('4', '各个区域topN的车流量', null, null, null, null, null, '{\"startDate\":[\"2018-07-01\"],\"endDate\":[\"2018-07-01\"]}');
-INSERT INTO `task` VALUES ('5', '道路转化率', null, null, null, null, null, '{\"startDate\":[\"2018-07-01\"],\"endDate\":[\"2018-07-01\"],\"roadFlow\":[\"0001,0002,0003,0004,0005\"]}');
+INSERT INTO `task` VALUES ('1', '卡口流量监测', null, '', '', null, null, '{\"startDate\":[\"2019-07-20\"],\"endDate\":[\"2019-07-20\"],\"topNum\":[\"5\"],\"areaName\":[\"海淀区\"]}');
+INSERT INTO `task` VALUES ('2', '随机抽取N个车辆信息', null, null, null, null, null, '{\"startDate\":[\"2019-07-20\"],\"endDate\":[\"2019-07-20\"],\"extractNum\":[\"100\"]}');
+INSERT INTO `task` VALUES ('3', '跟车分析', null, null, null, null, null, '{\"startDate\":[\"2019-07-20\"],\"endDate\":[\"2019-07-20\"],\"cars\":[\"京I42152,京Q18277,京K10100,京R24874,京N63229,京E25462,京W43404,京J13254,鲁G65763,鲁R55733,京L32167,京R54122,京K44557,京W41927,京S90923,京D86196,京W63299,沪N19518,京B47292,京A11951,沪D71306,沪D39243,京G44724,京E05123,京Y03722,京O28098,鲁Y63080,深N55336,京G89927,京Z29402\"]}');
+INSERT INTO `task` VALUES ('4', '各个区域topN的车流量', null, null, null, null, null, '{\"startDate\":[\"2019-07-20\"],\"endDate\":[\"2019-07-20\"]}');
+INSERT INTO `task` VALUES ('5', '道路转化率', null, null, null, null, null, '{\"startDate\":[\"2019-07-20\"],\"endDate\":[\"2019-07-20\"],\"roadFlow\":[\"0001,0002,0003,0004,0005\"]}');
 
 -- ----------------------------
 -- Table structure for top10_speed_detail

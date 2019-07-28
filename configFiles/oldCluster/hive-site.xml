@@ -1,0 +1,10 @@
+<configuration>
+<property>
+<name>hive.metastore.uris</name>
+<value>thrift://mynode1:9083</value>
+</property>
+</configuration>
+
+<!--
+-server -Xms512M -Xmx1024M -XX:PermSize=256M -XX:MaxNewSize=512M -XX:MaxPermSize=512M
+-->

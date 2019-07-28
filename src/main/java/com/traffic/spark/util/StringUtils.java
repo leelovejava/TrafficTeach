@@ -52,7 +52,7 @@ public class StringUtils {
      * @param str
      * @return
      */
-    public static String fulfuill(String str) {
+    public static String fulFuill(String str) {
         if (str.length() == 1)
             return "0" + str;
         return str;
@@ -66,7 +66,7 @@ public class StringUtils {
      * @param str
      * @return
      */
-    public static String fulfuill(int num, String str) {
+    public static String fulFuill(int num, String str) {
         if (str.length() == num) {
             return str;
         } else {
@@ -87,7 +87,7 @@ public class StringUtils {
      * @param delimiter 分隔符
      * @param field     字段
      * @return 字段值
-     * name=zhangsan|age=18
+     * @example name=zhangsan|age=18
      */
     public static String getFieldFromConcatString(String str, String delimiter, String field) {
         try {

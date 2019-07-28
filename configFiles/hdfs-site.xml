@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+    <property>
+        <!--这里配置逻辑名称，可以随意写 -->
+        <name>dfs.nameservices</name>
+        <value>mycluster</value>
+    </property>
+    <!-- 禁用权限 -->    
+    <property>
+        <name>dfs.permissions.enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <!-- 配置namenode 的名称，多个用逗号分割  -->
+        <name>dfs.ha.namenodes.mycluster</name>
+        <value>nn1,nn2</value>
+    </property>
+    <property>
+        <!-- dfs.namenode.rpc-address.[nameservice ID].[name node ID] namenode 所在服务器名称和RPC监听端口号  -->
+        <name>dfs.namenode.rpc-address.mycluster.nn1</name>
+        <value>c7node1:8020</value>
+    </property>
+    <property>
+        <!-- dfs.namenode.rpc-address.[nameservice ID].[name node ID] namenode 所在服务器名称和RPC监听端口号  -->
+        <name>dfs.namenode.rpc-address.mycluster.nn2</name>
+        <value>c7node2:8020</value>
+    </property>
+    <property>
+        <!-- dfs.namenode.http-address.[nameservice ID].[name node ID] namenode 监听的HTTP协议端口 -->
+        <name>dfs.namenode.http-address.mycluster.nn1</name>
+        <value>c7node1:50070</value>
+    </property>
+    <property>
+        <!-- dfs.namenode.http-address.[nameservice ID].[name node ID] namenode 监听的HTTP协议端口 -->
+        <name>dfs.namenode.http-address.mycluster.nn2</name>
+        <value>c7node2:50070</value>
+    </property>
+
+    <property>
+        <!-- namenode 共享的编辑目录， journalnode 所在服务器名称和监听的端口 -->
+        <name>dfs.namenode.shared.edits.dir</name>
+        <value>qjournal://c7node3:8485;c7node4:8485;c7node5:8485/mycluster</value>
+    </property>
+
+    <property>
+        <!-- namenode高可用代理类 -->
+        <name>dfs.client.failover.proxy.provider.mycluster</name>
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+
+    <property>
+        <!-- 使用ssh 免密码自动登录 -->
+        <name>dfs.ha.fencing.methods</name>
+        <value>sshfence</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.fencing.ssh.private-key-files</name>
+        <value>/root/.ssh/id_rsa</value>
+    </property>
+
+    <property>
+        <!-- journalnode 存储数据的地方 -->
+        <name>dfs.journalnode.edits.dir</name>
+        <value>/opt/data/journal/node/local/data</value>
+    </property>
+
+    <property>
+        <!-- 配置namenode自动切换 -->
+        <name>dfs.ha.automatic-failover.enabled</name>
+        <value>true</value>
+    </property>
+
+</configuration>

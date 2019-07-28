@@ -7,8 +7,8 @@ import java.util.Date;
 
 /**
  * 日期时间工具类
- * @author Administrator
  *
+ * @author Administrator
  */
 public class DateUtils {
 
@@ -21,6 +21,7 @@ public class DateUtils {
 
     /**
      * 判断一个时间是否在另一个时间之前
+     *
      * @param time1 第一个时间
      * @param time2 第二个时间
      * @return 判断结果
@@ -30,7 +31,7 @@ public class DateUtils {
             Date dateTime1 = TIME_FORMAT.parse(time1);
             Date dateTime2 = TIME_FORMAT.parse(time2);
 
-            if(dateTime1.before(dateTime2)) {
+            if (dateTime1.before(dateTime2)) {
                 return true;
             }
         } catch (Exception e) {
@@ -41,6 +42,7 @@ public class DateUtils {
 
     /**
      * 判断一个时间是否在另一个时间之后
+     *
      * @param time1 第一个时间
      * @param time2 第二个时间
      * @return 判断结果
@@ -50,7 +52,7 @@ public class DateUtils {
             Date dateTime1 = TIME_FORMAT.parse(time1);
             Date dateTime2 = TIME_FORMAT.parse(time2);
 
-            if(dateTime1.after(dateTime2)) {
+            if (dateTime1.after(dateTime2)) {
                 return true;
             }
         } catch (Exception e) {
@@ -61,6 +63,7 @@ public class DateUtils {
 
     /**
      * 计算时间差值（单位为秒）
+     *
      * @param time1 时间1
      * @param time2 时间2
      * @return 差值
@@ -81,6 +84,7 @@ public class DateUtils {
 
     /**
      * 获取年月日和小时
+     *
      * @param datetime 时间（yyyy-MM-dd HH:mm:ss）
      * @return 结果（yyyy-MM-dd_HH）
      */
@@ -93,6 +97,7 @@ public class DateUtils {
 
     /**
      * 获取当天日期（yyyy-MM-dd）
+     *
      * @return 当天日期
      */
     public static String getTodayDate() {
@@ -101,6 +106,7 @@ public class DateUtils {
 
     /**
      * 获取昨天的日期（yyyy-MM-dd）
+     *
      * @return 昨天的日期
      */
     public static String getYesterdayDate() {
@@ -115,6 +121,7 @@ public class DateUtils {
 
     /**
      * 格式化日期（yyyy-MM-dd）
+     *
      * @param date Date对象
      * @return 格式化后的日期
      */
@@ -124,6 +131,7 @@ public class DateUtils {
 
     /**
      * 格式化时间（yyyy-MM-dd HH:mm:ss）
+     *
      * @param date Date对象
      * @return 格式化后的时间
      */
@@ -133,6 +141,7 @@ public class DateUtils {
 
     /**
      * 解析时间字符串
+     *
      * @param time 时间字符串
      * @return Date
      */
@@ -147,8 +156,9 @@ public class DateUtils {
 
     /**
      * 格式化日期key
+     *
      * @param date
-     * @return  yyyyMMdd
+     * @return yyyyMMdd
      */
     public static String formatDateKey(Date date) {
         return DATEKEY_FORMAT.format(date);
@@ -156,6 +166,7 @@ public class DateUtils {
 
     /**
      * 格式化日期key	(yyyyMMdd)
+     *
      * @param datekey
      * @return
      */
@@ -170,28 +181,27 @@ public class DateUtils {
 
     /**
      * 格式化时间，保留到分钟级别
-     * 
+     *
      * @param date
-     * @return  yyyyMMddHHmm --201701012301
+     * @return yyyyMMddHHmm --201701012301
      */
     public static String formatTimeMinute(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
         return sdf.format(date);
     }
-    
+
     /**
-     * 
      * @param dateTime yyyy-MM-dd HH:mm:ss
      * @return
      */
-	public static String getRangeTime(String dateTime) {
-		 String date = dateTime.split(" ")[0];
-		 String hour = dateTime.split(" ")[1].split(":")[0];
-		 int minute = StringUtils.convertStringtoInt(dateTime.split(" ")[1].split(":")[1]);
+    public static String getRangeTime(String dateTime) {
+        String date = dateTime.split(" ")[0];
+        String hour = dateTime.split(" ")[1].split(":")[0];
+        int minute = StringUtils.convertStringtoInt(dateTime.split(" ")[1].split(":")[1]);
 //		 String second = dateTime.split(" ")[1].split(":")[2];
-		 if(minute+(5-minute % 5) == 60){
-			 return date+" "+hour+":"+StringUtils.fulfuill((minute-(minute % 5))+"")+"~"+date+" "+StringUtils.fulfuill((Integer.parseInt(hour)+1)+"")+":00";
-		 }
-		 return date+" "+hour+":"+StringUtils.fulfuill((minute-(minute % 5))+"") +"~" + date+" "+hour+":"+StringUtils.fulfuill((minute+(5-minute % 5))+"");
-	}
+        if (minute + (5 - minute % 5) == 60) {
+            return date + " " + hour + ":" + StringUtils.fulFuill((minute - (minute % 5)) + "") + "~" + date + " " + StringUtils.fulFuill((Integer.parseInt(hour) + 1) + "") + ":00";
+        }
+        return date + " " + hour + ":" + StringUtils.fulFuill((minute - (minute % 5)) + "") + "~" + date + " " + hour + ":" + StringUtils.fulFuill((minute + (5 - minute % 5)) + "");
+    }
 }

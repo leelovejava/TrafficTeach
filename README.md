@@ -11,7 +11,7 @@
 * 稽查布控，道路实时拥堵统计 SparkStreaming
 
 ## hive表
-monitor_flow_action表
+`monitor_flow_action`表
 – date 日期 天
 – monitor_id 卡口号
 – camera_id 摄像头编号
@@ -21,7 +21,7 @@ monitor_flow_action表
 – road_id 道路id
 – area_id 区域ID
 
-monitor_camera_info表 某一个卡扣对应的摄像头编号
+`monitor_camera_info`表 某一个卡扣对应的摄像头编号
 – monitor_id：卡扣编号
 – camera_id：摄像头编号
 
