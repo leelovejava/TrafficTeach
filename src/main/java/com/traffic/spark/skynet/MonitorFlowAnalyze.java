@@ -457,10 +457,7 @@ public class MonitorFlowAnalyze {
 
         JavaRDD<String> intersection = area1Cars.intersection(area2Cars);
         intersection.foreach(new VoidFunction<String>() {
-
-            /**
-             *
-             */
+            
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -760,10 +757,6 @@ public class MonitorFlowAnalyze {
         });
 
         JavaPairRDD<String, String> areaId2AggregateInfosRDD = aggregateMonitorId2DetailRDD.mapToPair(new PairFunction<Tuple2<String, String>, String, String>() {
-
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -801,7 +794,7 @@ public class MonitorFlowAnalyze {
      *
      * @param sc
      * @param taskId
-     * @param top10MonitorIds
+     * @param top5MonitorIds
      * @param monitor2DetailRDD
      */
     private static void getMonitorDetails(JavaSparkContext sc, final long taskId, List<String> top5MonitorIds, JavaPairRDD<String, Row> monitor2DetailRDD) {
@@ -889,10 +882,6 @@ public class MonitorFlowAnalyze {
          */
         JavaPairRDD<SpeedSortKey, String> speedSortKey2MonitorId =
                 groupByMonitorId.mapToPair(new PairFunction<Tuple2<String, Iterable<Row>>, SpeedSortKey, String>() {
-
-                    /**
-                     *
-                     */
                     private static final long serialVersionUID = 1L;
 
                     @Override
@@ -946,7 +935,7 @@ public class MonitorFlowAnalyze {
     /**
      * 按照monitor_id进行聚合
      *
-     * @param monitorId2Detail
+     * @param monitorId2RowRDD
      * @return (" monitorId ", " monitorId = xxx | areaId = xxx | cameraIds = xxx | cameraCount = xxx | carCount = xxx ")
      * ("0005","monitorId=0005|areaId=02|camearIds=09200,03243,02435,03232|cameraCount=4|carCount=100")
      * 假设其中一条数据是以上这条数据，那么说明在这个0005卡扣下有4个camera,那么这个卡扣一共通过了100辆车信息.
@@ -1233,7 +1222,10 @@ public class MonitorFlowAnalyze {
      * 检测卡口状态
      *
      * @param sc
-     * @param cameraRDD
+     * @param monitorId2CameraCountRDD
+     * @param taskId
+     * @param taskParamsJsonObject
+     * @param monitorAndCameraStateAccumulator 累加器
      * @return RDD(实际卡扣对应车流量总数, 对应的卡扣号)
      */
     private static JavaPairRDD<Integer, String> checkMonitorState(
@@ -1241,8 +1233,7 @@ public class MonitorFlowAnalyze {
             SparkSession spark,
             JavaPairRDD<String, String> monitorId2CameraCountRDD,
             final long taskId, JSONObject taskParamsJsonObject,
-            SelfDefineAccumulator monitorAndCameraStateAccumulator
-            /*final Accumulator<String> monitorAndCameraStateAccumulator*/) {
+            SelfDefineAccumulator monitorAndCameraStateAccumulator) {
         /**
          * 从monitor_camera_info标准表中查询出来每一个卡口对应的camera的数量
          */
@@ -1292,7 +1283,7 @@ public class MonitorFlowAnalyze {
                             cameraIds.append("," + cameraIterator.next());
                             count++;
                         }
-                        //cameraIds=00001,00002,00003,00004|cameraCount=4
+                        // cameraIds=00001,00002,00003,00004|cameraCount=4
                         String cameraInfos = Constants.FIELD_CAMERA_IDS + "=" + cameraIds.toString().substring(1) + "|"
                                 + Constants.FIELD_CAMERA_COUNT + "=" + count;
                         return new Tuple2<String, String>(monitorId, cameraInfos);
@@ -1306,7 +1297,6 @@ public class MonitorFlowAnalyze {
          */
         JavaPairRDD<String, Tuple2<String, Optional<String>>> joinResultRDD =
                 standardMonitor2CameraInfos.leftOuterJoin(monitorId2CameraCountRDD);
-
 
         /**
          * carCount2MonitorId 最终返回的K,V格式的数据
@@ -1328,7 +1318,7 @@ public class MonitorFlowAnalyze {
 
                         List<Tuple2<Integer, String>> list = new ArrayList<>();
                         while (iterator.hasNext()) {
-                            //储藏返回值
+                            // 储藏返回值
                             Tuple2<String, Tuple2<String, Optional<String>>> tuple = iterator.next();
                             String monitorId = tuple._1;
                             String standardCameraInfos = tuple._2._1;
@@ -1336,10 +1326,10 @@ public class MonitorFlowAnalyze {
                             String factCameraInfos = "";
 
                             if (factCameraInfosOptional.isPresent()) {
-                                //这里面是实际检测数据中有标准卡扣信息
+                                // 这里面是实际检测数据中有标准卡扣信息
                                 factCameraInfos = factCameraInfosOptional.get();
                             } else {
-                                //这里面是实际检测数据中没有标准卡扣信息
+                                // 这里面是实际检测数据中没有标准卡扣信息
 //						String standardCameraIds = 
 //									StringUtils.getFieldFromConcatString(standardCameraInfos, "\\|", Constants.FIELD_CAMERA_IDS);
 //						String[] split = standardCameraIds.split(",");
@@ -1365,7 +1355,7 @@ public class MonitorFlowAnalyze {
                                         Constants.FIELD_ABNORMAL_MONITOR_COUNT + "=1|"
                                                 + Constants.FIELD_ABNORMAL_CAMERA_COUNT + "=" + abnoramlCameraCount + "|"
                                                 + Constants.FIELD_ABNORMAL_MONITOR_CAMERA_INFOS + "=" + monitorId + ":" + standardCameraIds);
-                                //跳出了本次while
+                                // 跳出了本次while
                                 continue;
                             }
                             /**
@@ -1398,8 +1388,10 @@ public class MonitorFlowAnalyze {
                                 List<String> factCameraIdList = Arrays.asList(factCameraIds.split(","));
                                 List<String> standardCameraIdList = Arrays.asList(standardCameraIds.split(","));
                                 StringBuilder abnormalCameraInfos = new StringBuilder();
-                                int abnormalCameraCount = 0;//不正常摄像头数
-                                int normalCameraCount = 0;//正常摄像头数
+                                // 不正常摄像头数
+                                int abnormalCameraCount = 0;
+                                // 正常摄像头数
+                                int normalCameraCount = 0;
                                 for (String cameraId : standardCameraIdList) {
                                     if (!factCameraIdList.contains(cameraId)) {
                                         abnormalCameraCount++;
@@ -1407,18 +1399,18 @@ public class MonitorFlowAnalyze {
                                     }
                                 }
                                 normalCameraCount = standardCameraIdList.size() - abnormalCameraCount;
-                                //往累加器中更新状态
+                                // 往累加器中更新状态
                                 monitorAndCameraStateAccumulator.add(
                                         Constants.FIELD_ABNORMAL_MONITOR_COUNT + "=1|"
                                                 + Constants.FIELD_NORMAL_CAMERA_COUNT + "=" + normalCameraCount + "|"
                                                 + Constants.FIELD_ABNORMAL_CAMERA_COUNT + "=" + abnormalCameraCount + "|"
                                                 + Constants.FIELD_ABNORMAL_MONITOR_CAMERA_INFOS + "=" + monitorId + ":" + abnormalCameraInfos.toString().substring(1));
                             }
-                            //从实际数据拼接到字符串中获取车流量
+                            // 从实际数据拼接到字符串中获取车流量
                             int carCount = Integer.parseInt(StringUtils.getFieldFromConcatString(factCameraInfos, "\\|", Constants.FIELD_CAR_COUNT));
                             list.add(new Tuple2<Integer, String>(carCount, monitorId));
                         }
-                        //最后返回的list是实际监测到的数据中，list[(卡扣对应车流量总数,对应的卡扣号),... ...]
+                        // 最后返回的list是实际监测到的数据中，list[(卡扣对应车流量总数,对应的卡扣号),... ...]
                         return list.iterator();
                     }
                 });

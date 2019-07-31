@@ -104,7 +104,7 @@ public class MockData {
         // 默认打印出来df里面的20行数据
         System.out.println("----打印 车辆信息数据----");
         ds.show();
-        ds.registerTempTable("monitor_flow_action");
+        ds.createOrReplaceTempView("monitor_flow_action");
 
         /**
          * monitorAndCameras    key：monitor_id
@@ -153,7 +153,7 @@ public class MockData {
 
         rowRdd = sc.parallelize(dataList);
         Dataset<Row> monitorDF = spark.createDataFrame(rowRdd, monitorSchema);
-        monitorDF.registerTempTable("monitor_camera_info");
+        monitorDF.createOrReplaceTempView("monitor_camera_info");
         System.out.println("----打印 卡扣号对应摄像头号 数据----");
         monitorDF.show();
     }

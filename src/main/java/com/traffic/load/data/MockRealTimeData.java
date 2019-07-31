@@ -8,6 +8,12 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import java.util.Properties;
 import java.util.Random;
 
+/**
+ * 模拟实时的数据
+ *
+ * @author leelovejava
+ * @date 2019-07-31
+ */
 public class MockRealTimeData extends Thread {
 
     private static final Random random = new Random();

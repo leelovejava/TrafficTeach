@@ -9,7 +9,7 @@ package com.traffic.spark.constant;
  */
 public interface Constants {
     /**
-     * 项目配置相关的常量
+     * 1. 项目配置相关的常量
      */
     public static final String JDBC_DRIVER = "jdbc.driver";
     String JDBC_DATASOURCE_SIZE = "jdbc.datasource.size";
@@ -29,7 +29,7 @@ public interface Constants {
     String KAFKA_TOPICS = "kafka.topics";
 
     /**
-     * Spark作业相关的常量
+     * 2. Spark作业相关的常量
      */
     String SPARK_APP_NAME = "MonitorFlowAnalyze";
     String FIELD_CAMERA_COUNT = "cameraCount";
@@ -50,20 +50,28 @@ public interface Constants {
     String FIELD_MONITOR_ID = "monitorId";
     String FIELD_ACTION_TIME = "actionTime";
     String FIELD_EXTRACT_NUM = "extractNum";
-    //低速行驶
+    /**
+     * 低速行驶
+     */
     String FIELD_SPEED_0_60 = "0_60";
-    //正常行驶
+    /**
+     * 正常行驶
+     */
     String FIELD_SPEED_60_90 = "60_90";
-    //中速行驶
+    /**
+     * 中速行驶
+     */
     String FIELD_SPEED_90_120 = "90_120";
-    //高速行驶
+    /**
+     * 高速行驶
+     */
     String FIELD_SPEED_120_MAX = "120_max";
     String FIELD_AREA_ID = "areaId";
     String FIELD_AREA_NAME = "areaName";
 
 
     /**
-     * 任务相关的常量
+     * 3. 任务相关的常量
      */
     String PARAM_START_DATE = "startDate";
     String PARAM_END_DATE = "endDate";

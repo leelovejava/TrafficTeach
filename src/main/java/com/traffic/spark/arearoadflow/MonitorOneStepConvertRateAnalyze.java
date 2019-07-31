@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * 卡扣流
+ * 卡扣流量监控
  * monitor_id   1 2 3 4      1_2 2_3 3_4
  * 指定一个道路流  1 2 3 4
  * 1 carCount1 2carCount2  转化率 carCount2/carCount1
@@ -41,13 +41,14 @@ import java.util.Map.Entry;
  * @author root
  */
 public class MonitorOneStepConvertRateAnalyze {
+
     public static void main(String[] args) {
 
         /**
          * 判断应用程序是否在本地执行
          */
         JavaSparkContext sc = null;
-        SparkSession spark = null;
+        SparkSession spark;
         Boolean onLocal = ConfigurationManager.getBoolean(Constants.SPARK_LOCAL);
 
         if (onLocal) {
@@ -253,9 +254,6 @@ public class MonitorOneStepConvertRateAnalyze {
                                                                       final Broadcast<String> roadFlowBroadcast, JavaPairRDD<String, Row> car2RowRDD) {
         return car2RowRDD.groupByKey().flatMapToPair(new PairFlatMapFunction<Tuple2<String, Iterable<Row>>, String, Long>() {
 
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -353,10 +351,6 @@ public class MonitorOneStepConvertRateAnalyze {
 
     private static JavaPairRDD<String, Row> getCar2RowRDD(JavaRDD<Row> car2RowRDD) {
         return car2RowRDD.mapToPair(new PairFunction<Row, String, Row>() {
-
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override

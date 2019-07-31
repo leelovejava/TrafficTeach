@@ -49,7 +49,7 @@ object MockDataScala {
      */
     for (i <- 1 to 3000) {
       //模拟车牌号：如：京A00001
-      val car: String = locations(random.nextInt(10)) + (65 + random.nextInt(26)).toChar + StringUtils.fulfuill(5, random.nextInt(100000) + "")
+      val car: String = locations(random.nextInt(10)) + (65 + random.nextInt(26)).toChar + StringUtils.fulFuill(5, random.nextInt(100000) + "")
 
       //baseActionTime 模拟24小时
       var baseActionTime: String = date + " " + StringUtils.fulFuill(random.nextInt(24) + "") //2019-05-05 08

@@ -17,7 +17,7 @@ object Test_DF_DS_RDD_Speed {
     val firstRdd: RDD[(String, Int)] = spark.sparkContext.parallelize(0 to 400000).map(num => {
       (UUID.randomUUID().toString, num)
     })
-    firstRdd
+    //firstRdd
     firstRdd.cache()
 
     val beginTimeRdd: Long = System.currentTimeMillis()
