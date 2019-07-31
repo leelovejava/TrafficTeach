@@ -4,6 +4,9 @@ import com.traffic.spark.constant.Constants;
 import com.traffic.spark.util.StringUtils;
 import org.apache.spark.util.AccumulatorV2;
 
+/**
+ * Spark累加器
+ */
 public class SelfDefineAccumulator extends AccumulatorV2<String, String> {
     String returnResult = "";
 

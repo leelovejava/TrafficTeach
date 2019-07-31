@@ -164,7 +164,7 @@ public class MonitorFlowAnalyze {
          * monitor_id=|cameraIds=|area_id=|camera_count=|carCount=
          * 例如:
          * ("0005","monitorId=0005|camearIds=09200,03243,02435,03232|cameraCount=4|carCount=100")
-         *
+         * 图上rdd4
          */
         JavaPairRDD<String, String> aggregateMonitorId2DetailRDD = aggreagteByMonitor(monitorId2RowsRDD);
 
@@ -192,9 +192,6 @@ public class MonitorFlowAnalyze {
         //从所有数据中找出卡扣 0001 下的车辆
         List<String> cars = cameraRDD.filter(new Function<Row, Boolean>() {
 
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -202,10 +199,6 @@ public class MonitorFlowAnalyze {
                 return "0001".equals(row.getAs("monitor_id") + "");
             }
         }).map(new Function<Row, String>() {
-
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -457,7 +450,7 @@ public class MonitorFlowAnalyze {
 
         JavaRDD<String> intersection = area1Cars.intersection(area2Cars);
         intersection.foreach(new VoidFunction<String>() {
-            
+
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -1221,29 +1214,33 @@ public class MonitorFlowAnalyze {
     /**
      * 检测卡口状态
      *
-     * @param sc
-     * @param monitorId2CameraCountRDD
-     * @param taskId
-     * @param taskParamsJsonObject
-     * @param monitorAndCameraStateAccumulator 累加器
+     * @param sc                               JavaSparkContext
+     * @param spark                            SparkSession
+     * @param monitorId2CameraCountRDD         分组后拼接的rdd
+     * @param taskId                           task表id
+     * @param taskParamsJsonObject             task表中的json对象 {\"startDate\":[\"2019-07-20\"],\"endDate\":[\"2019-07-20\"],\"topNum\":[\"5\"],\"areaName\":[\"海淀区\"]}
+     * @param monitorAndCameraStateAccumulator 自定义的累加器
      * @return RDD(实际卡扣对应车流量总数, 对应的卡扣号)
      */
     private static JavaPairRDD<Integer, String> checkMonitorState(
             JavaSparkContext sc,
             SparkSession spark,
             JavaPairRDD<String, String> monitorId2CameraCountRDD,
-            final long taskId, JSONObject taskParamsJsonObject,
+            final long taskId,
+            JSONObject taskParamsJsonObject,
             SelfDefineAccumulator monitorAndCameraStateAccumulator) {
         /**
          * 从monitor_camera_info标准表中查询出来每一个卡口对应的camera的数量
          */
         String sqlText = "SELECT * FROM monitor_camera_info";
         Dataset<Row> standardDF = spark.sql(sqlText);
+        // rdd<Row> 对应图上的rddA
         JavaRDD<Row> standardRDD = standardDF.javaRDD();
         /**
          * 使用mapToPair算子将standardRDD变成KV格式的RDD
          * monitorId2CameraId   :
          * (K:monitor_id  v:camera_id)
+         * 对应图上的 rddB
          */
         JavaPairRDD<String, String> monitorId2CameraId = standardRDD.mapToPair(
                 new PairFunction<Row, String, String>() {
@@ -1251,6 +1248,7 @@ public class MonitorFlowAnalyze {
 
                     @Override
                     public Tuple2<String, String> call(Row row) {
+                        // monitor_id,camera_id
                         return new Tuple2<String, String>(row.getString(0), row.getString(1));
                     }
                 });
@@ -1264,26 +1262,29 @@ public class MonitorFlowAnalyze {
          * 如何来统计？
          * 	1、按照monitor_id分组
          * 	2、使用mapToPair遍历，遍历的过程可以统计
+         *
+         * 	对应图上的rddD
+         * 	new PairFunction<Tuple2<String, Iterable<String>，String, String>
+         * 	monitor_id,monitor底下对应的camera,对应返回的Tuple2<String,String>
          */
         JavaPairRDD<String, String> standardMonitor2CameraInfos = monitorId2CameraId.groupByKey()
                 .mapToPair(new PairFunction<Tuple2<String, Iterable<String>>, String, String>() {
-
-                    /**
-                     *
-                     */
                     private static final long serialVersionUID = 1L;
 
                     @Override
                     public Tuple2<String, String> call(Tuple2<String, Iterable<String>> tuple) {
                         String monitorId = tuple._1;
                         Iterator<String> cameraIterator = tuple._2.iterator();
+
                         int count = 0;
                         StringBuilder cameraIds = new StringBuilder();
                         while (cameraIterator.hasNext()) {
                             cameraIds.append("," + cameraIterator.next());
+                            // count++ 求 camera count
                             count++;
                         }
-                        // cameraIds=00001,00002,00003,00004|cameraCount=4
+                        // 返回示例 cameraIds=00001,00002,00003,00004|cameraCount=4
+                        // cameraIds.toString().substring(1) 去掉前面的逗号
                         String cameraInfos = Constants.FIELD_CAMERA_IDS + "=" + cameraIds.toString().substring(1) + "|"
                                 + Constants.FIELD_CAMERA_COUNT + "=" + count;
                         return new Tuple2<String, String>(monitorId, cameraInfos);
@@ -1294,6 +1295,8 @@ public class MonitorFlowAnalyze {
         /**
          * 将两个RDD进行比较，join  leftOuterJoin
          * 为什么使用左外连接？ 左：标准表里面的信息  右：实际信息
+         * rdd D和rdd 4 左外连接
+         * Optional<String> 实际检测的信息，cameraids|carCount
          */
         JavaPairRDD<String, Tuple2<String, Optional<String>>> joinResultRDD =
                 standardMonitor2CameraInfos.leftOuterJoin(monitorId2CameraCountRDD);
@@ -1302,14 +1305,17 @@ public class MonitorFlowAnalyze {
          * carCount2MonitorId 最终返回的K,V格式的数据
          * K：实际监测数据中某个卡扣对应的总车流量
          * V：实际监测数据中这个卡扣 monitorId
+         *
+         * mapPartitionsToPair和mapToPair的区别?
+         * mapPartitionsToPair 一次处理一个分区
+         * mapToPair一次处理一条
+         * 普通的map,每条数据都会传入function中进行计算一次；而是用MapPartitions时，function会一次接受所有partition的数据出入到function中计算一次，性能较高。
+         * 但是如果内存不足时，使用MapPartitions，一次将所有的partition数据传入，可能会发生OOM异常
          */
         JavaPairRDD<Integer, String> carCount2MonitorId = joinResultRDD.mapPartitionsToPair(
                 new PairFlatMapFunction<
                         Iterator<Tuple2<String, Tuple2<String, Optional<String>>>>, Integer, String>() {
-
-                    /**
-                     *
-                     */
+                    
                     private static final long serialVersionUID = 1L;
 
                     @Override
