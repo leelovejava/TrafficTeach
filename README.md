@@ -246,7 +246,9 @@ monitor_camera_info 卡扣与摄像头基本关系表
 	slide interval:5s
 
 ### 10.动态改变广播变量
+	`transform` `foreachRDD`
 	
+
 ### 11.统计每个区域中车辆最多的前3道路
 	道路车辆：道路中的每个卡扣经过的车辆累加
 	
