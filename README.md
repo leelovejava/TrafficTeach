@@ -173,6 +173,13 @@ monitor_camera_info 卡扣与摄像头基本关系表
 	2.过滤日期范围内 这些车辆经过卡扣的时间，按照时间升序排序
 	
 ### 6.车辆碰撞
+	01,02中这一天同时出现的车辆
+	01：（car,row） 02:(car,row)
+	(car,row).join(car,row)
+	
+	01:car  02:car
+	car02.intersection(car02)
+	
 
 ### 7.随机抽取车辆
 	在一天中要随机抽取100辆车，抽取的车辆可以权威代表当天交通运行情况。
@@ -250,7 +257,7 @@ monitor_camera_info 卡扣与摄像头基本关系表
 	越秀区	xxx2		150
 	越秀区	xxx3		100
 	
-	
+	SparkSQL
 	Hive 表 --t1 :
 		monitor_id		car		road_id		area_id	
 		
@@ -317,6 +324,11 @@ sql:
 				) t2
 			) t3
 		where rank <=3
+### 车辆轨迹
+	
+	
+统计卡扣0001下所有车辆的轨迹  -- take(20)
+	
 
 各区域车流量最高topN的道路统计
 1.会将小于spark.sql.autoBroadcastJoinThreshold值（默认为10M）的表广播到executor节点，不走shuffle过程,更加高效。
